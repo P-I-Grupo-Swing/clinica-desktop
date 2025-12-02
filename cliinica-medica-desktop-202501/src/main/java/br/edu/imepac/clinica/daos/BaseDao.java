@@ -22,7 +22,7 @@ public abstract class BaseDao {
     
     private static final String URL = "jdbc:mysql://localhost:3306/clinica";
     private static final String USUARIO = "root";
-    private static final String SENHA = "909890";
+    private static final String SENHA = "1234";
     
     /**
      * Obtém uma conexão ativa com o banco de dados.

@@ -43,6 +43,9 @@ public class MainMenu extends BaseScreen {
         medicoMenu = new javax.swing.JMenu();
         cadastrarMedico = new javax.swing.JMenuItem();
         listarMedico = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        mntmPacientes = new javax.swing.JMenuItem();
+        mntmListarPacientes = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -86,6 +89,26 @@ public class MainMenu extends BaseScreen {
 
         jMenuBar1.add(medicoMenu);
 
+        jMenu1.setText("Pacientes");
+
+        mntmPacientes.setText("Novo Paciente");
+        mntmPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mntmPacientesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mntmPacientes);
+
+        mntmListarPacientes.setText("Listar Pacientes");
+        mntmListarPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mntmListarPacientesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mntmListarPacientes);
+
+        jMenuBar1.add(jMenu1);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -126,6 +149,15 @@ public class MainMenu extends BaseScreen {
         medicoListForm.setVisible(true);
     }//GEN-LAST:event_listarMedicoActionPerformed
 
+    private void mntmPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mntmPacientesActionPerformed
+new br.edu.imepac.clinica.screens.pacientes.PacienteAddForm().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_mntmPacientesActionPerformed
+
+    private void mntmListarPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mntmListarPacientesActionPerformed
+new br.edu.imepac.clinica.screens.pacientes.PacienteListForm().setVisible(true);        // TODO add your handling code here:
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mntmListarPacientesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -155,9 +187,12 @@ public class MainMenu extends BaseScreen {
     private javax.swing.JMenuItem cadastrarEspecialidade;
     private javax.swing.JMenuItem cadastrarMedico;
     private javax.swing.JMenu especialidadeMenu;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem listarEspecialidade;
     private javax.swing.JMenuItem listarMedico;
     private javax.swing.JMenu medicoMenu;
+    private javax.swing.JMenuItem mntmListarPacientes;
+    private javax.swing.JMenuItem mntmPacientes;
     // End of variables declaration//GEN-END:variables
 }
