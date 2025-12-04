@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
  * @author evertonhf
  */
 public class MedicoUpdateForm extends BaseScreen {
+    
+    private Medico medicoDataForm;
 
     /**
      * Creates new form MedicoUpdateForm
@@ -27,12 +29,14 @@ public class MedicoUpdateForm extends BaseScreen {
      */
     public MedicoUpdateForm(long medicoId) {
         initComponents();
-        setImageIcon(ConstantesImages.MEDICO_ADD_FORM, imageIcon);
+        try {
+            setImageIcon(ConstantesImages.MEDICO_ADD_FORM, imageIcon);
+        } catch (Exception e) {}
+        
         posicionarTopo(20);
         centralizar();
 
         loadEspecialidadesInForm();
-
         loadDataInForm(medicoId);
     }
 
@@ -43,6 +47,7 @@ public class MedicoUpdateForm extends BaseScreen {
         if (this.medicoDataForm == null) {
             JOptionPane.showMessageDialog(this, "Registro inválido para atualização!", "Status da operação", JOptionPane.ERROR_MESSAGE);
             this.dispose();
+            return;
         }
 
         nomeField.setText(this.medicoDataForm.getNome());
@@ -197,28 +202,44 @@ public class MedicoUpdateForm extends BaseScreen {
     private void salvarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarBtnActionPerformed
 
         if (!campoObrigatoriosValidos()) {
-            JOptionPane.showMessageDialog(this, "Campos obrigatórios devem ser preenchidos!", "Status da operação", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Campos obrigatórios devem ser preenchidos!", "Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        Medico medico = new Medico(this.medicoDataForm.getId(), nomeField.getText(), crmField.getText(), ((Especialidade) especialidadesField.getSelectedItem()).getId());
-        MedicoDao medicoDao = new MedicoDao();
-        boolean status = medicoDao.atualizar(medico);
+        try {
+            // Cria o objeto médico com os novos dados da tela
+            Medico medico = new Medico(
+                this.medicoDataForm.getId(), 
+                nomeField.getText(), 
+                crmField.getText(), 
+                ((Especialidade) especialidadesField.getSelectedItem()).getId()
+            );
+            
+            // IMPORTANTE: Mantém o Perfil que já existia antes!
+            // Se não fizermos isso, o perfil pode se perder na atualização
+            medico.setPerfil(this.medicoDataForm.getPerfil());
+            
+            MedicoDao medicoDao = new MedicoDao();
+            boolean status = medicoDao.atualizar(medico);
 
-        if (status == true) {
-            JOptionPane.showMessageDialog(this, "Médico cadastrado com sucesso!", "Status da operação", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar Médico - contate o administrador!", "Status da operação", JOptionPane.ERROR_MESSAGE);
+            if (status) {
+                JOptionPane.showMessageDialog(this, "Médico atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose(); // Fecha a janela após salvar
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao atualizar Médico!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro técnico: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        limparFormmulario();
+        limparFormulario();
     }//GEN-LAST:event_salvarBtnActionPerformed
 
     private void LimparBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparBtnActionPerformed
-        limparFormmulario();
+        limparFormulario();
     }//GEN-LAST:event_LimparBtnActionPerformed
 
-    private void limparFormmulario() {
+    private void limparFormulario() {
         nomeField.setText("");
         crmField.setText("");
     }
@@ -267,5 +288,4 @@ public class MedicoUpdateForm extends BaseScreen {
     private javax.swing.JButton salvarBtn;
     // End of variables declaration//GEN-END:variables
 
-    private Medico medicoDataForm;
 }

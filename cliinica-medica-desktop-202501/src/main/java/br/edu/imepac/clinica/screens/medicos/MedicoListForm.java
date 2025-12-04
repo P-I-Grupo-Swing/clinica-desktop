@@ -11,6 +11,9 @@ import br.edu.imepac.clinica.utils.ConstantesImages;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 
 /**
  *
@@ -23,10 +26,23 @@ public class MedicoListForm extends BaseScreen {
      */
     public MedicoListForm() {
         initComponents();
-        setImageIcon(ConstantesImages.MEDICO_ADD_FORM, imageIcon);
+        try {
+            setImageIcon(ConstantesImages.MEDICO_ADD_FORM, imageIcon);
+        } catch (Exception e) {
+            
+        }
+        
         posicionarTopo(20);
         centralizar();
 
+      
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowActivated(java.awt.event.WindowEvent e) {
+                loadDataInTableFromDataBase();
+            }
+        });
+        
         loadDataInTableFromDataBase();
     }
 
@@ -41,12 +57,13 @@ public class MedicoListForm extends BaseScreen {
 
         jLabel1 = new javax.swing.JLabel();
         imageIcon = new javax.swing.JLabel();
-        excluirBtn = new javax.swing.JButton();
-        editarBtn = new javax.swing.JButton();
-        fecharBtn = new javax.swing.JButton();
+        bntExcluir = new javax.swing.JButton();
+        bntEditar = new javax.swing.JButton();
+        bntFechar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableMedicos = new javax.swing.JTable();
+        tblMedicos = new javax.swing.JTable();
+        bntNovo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowStateListener(new java.awt.event.WindowStateListener() {
@@ -61,31 +78,31 @@ public class MedicoListForm extends BaseScreen {
 
         imageIcon.setText("image-icon");
 
-        excluirBtn.setText("Excluir");
-        excluirBtn.addActionListener(new java.awt.event.ActionListener() {
+        bntExcluir.setText("Excluir");
+        bntExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                excluirBtnActionPerformed(evt);
+                bntExcluirActionPerformed(evt);
             }
         });
 
-        editarBtn.setText("Editar");
-        editarBtn.addActionListener(new java.awt.event.ActionListener() {
+        bntEditar.setText("Editar");
+        bntEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editarBtnActionPerformed(evt);
+                bntEditarActionPerformed(evt);
             }
         });
 
-        fecharBtn.setText("Fechar");
-        fecharBtn.addActionListener(new java.awt.event.ActionListener() {
+        bntFechar.setText("Fechar");
+        bntFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fecharBtnActionPerformed(evt);
+                bntFecharActionPerformed(evt);
             }
         });
 
         jLabel2.setForeground(new java.awt.Color(102, 102, 102));
         jLabel2.setText("Selecione a linha correspondente para realizar operações de edição e exclusão.");
 
-        tableMedicos.setModel(new javax.swing.table.DefaultTableModel(
+        tblMedicos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -108,15 +125,22 @@ public class MedicoListForm extends BaseScreen {
                 return canEdit [columnIndex];
             }
         });
-        tableMedicos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(tableMedicos);
-        if (tableMedicos.getColumnModel().getColumnCount() > 0) {
-            tableMedicos.getColumnModel().getColumn(0).setResizable(false);
-            tableMedicos.getColumnModel().getColumn(0).setPreferredWidth(10);
-            tableMedicos.getColumnModel().getColumn(1).setResizable(false);
-            tableMedicos.getColumnModel().getColumn(2).setResizable(false);
-            tableMedicos.getColumnModel().getColumn(3).setResizable(false);
+        tblMedicos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(tblMedicos);
+        if (tblMedicos.getColumnModel().getColumnCount() > 0) {
+            tblMedicos.getColumnModel().getColumn(0).setResizable(false);
+            tblMedicos.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tblMedicos.getColumnModel().getColumn(1).setResizable(false);
+            tblMedicos.getColumnModel().getColumn(2).setResizable(false);
+            tblMedicos.getColumnModel().getColumn(3).setResizable(false);
         }
+
+        bntNovo.setText("Novo");
+        bntNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntNovoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,21 +153,21 @@ public class MedicoListForm extends BaseScreen {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
-                        .addContainerGap(281, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(imageIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(excluirBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24)
-                                .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
-                                .addComponent(fecharBtn)
-                                .addContainerGap(45, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1)
-                                .addContainerGap())))))
+                                .addComponent(bntNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(bntEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(bntExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bntFechar)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,10 +182,11 @@ public class MedicoListForm extends BaseScreen {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(excluirBtn)
-                            .addComponent(editarBtn)
-                            .addComponent(fecharBtn))
-                        .addGap(22, 22, 22))
+                            .addComponent(bntExcluir)
+                            .addComponent(bntEditar)
+                            .addComponent(bntFechar)
+                            .addComponent(bntNovo))
+                        .addGap(22, 51, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(imageIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
@@ -170,20 +195,19 @@ public class MedicoListForm extends BaseScreen {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void fecharBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharBtnActionPerformed
+    private void bntFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntFecharActionPerformed
         this.dispose();
-    }//GEN-LAST:event_fecharBtnActionPerformed
+    }//GEN-LAST:event_bntFecharActionPerformed
 
-    private void excluirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirBtnActionPerformed
-        int linhaSelecionada = tableMedicos.getSelectedRow();
+    private void bntExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExcluirActionPerformed
+        int linhaSelecionada = tblMedicos.getSelectedRow();
 
         if (linhaSelecionada == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um médico para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Obtém o ID da primeira coluna (índice 0)
-        long id = (long) tableMedicos.getValueAt(linhaSelecionada, 0);
+        long id = (long) tblMedicos.getValueAt(linhaSelecionada, 0);
 
         int opcao = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o médico de ID " + id + "?", "Confirmação", JOptionPane.YES_NO_OPTION);
 
@@ -193,17 +217,17 @@ public class MedicoListForm extends BaseScreen {
 
             if (sucesso) {
                 JOptionPane.showMessageDialog(null, "Médico excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-
-                //Atualizar os dados da tabela
+                
+                
                 loadDataInTableFromDataBase();
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao excluir o médico.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_excluirBtnActionPerformed
+    }//GEN-LAST:event_bntExcluirActionPerformed
 
-    private void editarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBtnActionPerformed
-        int linhaSelecionada = tableMedicos.getSelectedRow();
+    private void bntEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntEditarActionPerformed
+        int linhaSelecionada = tblMedicos.getSelectedRow();
 
         if (linhaSelecionada == -1) {
             JOptionPane.showMessageDialog(null,
@@ -213,45 +237,60 @@ public class MedicoListForm extends BaseScreen {
             return;
         }
 
-        // Obtém o ID da primeira coluna (índice 0)
-        long id = (long) tableMedicos.getValueAt(linhaSelecionada, 0);
+        long id = (long) tblMedicos.getValueAt(linhaSelecionada, 0);
 
         MedicoUpdateForm medicoUpdateForm = new MedicoUpdateForm(id);
-        medicoUpdateForm.pack();
         medicoUpdateForm.setVisible(true);
-    }//GEN-LAST:event_editarBtnActionPerformed
+    }//GEN-LAST:event_bntEditarActionPerformed
 
     private void formWindowStateChanged(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowStateChanged
     }//GEN-LAST:event_formWindowStateChanged
 
+    private void bntNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNovoActionPerformed
+                                        
+        MedicoAddForm screen = new MedicoAddForm();
+        screen.setVisible(true);
+   
+    }//GEN-LAST:event_bntNovoActionPerformed
+
     private void loadDataInTableFromDataBase() {
-        MedicoDao medicoDao = new MedicoDao();
-        List<Medico> medicos = medicoDao.listarTodos();
+        try {
+            MedicoDao medicoDao = new MedicoDao();
+            List<Medico> medicos = medicoDao.listarTodos();
 
-        DefaultTableModel modelo = (DefaultTableModel) tableMedicos.getModel();
-        modelo.setRowCount(0);
-        
-        // Adiciona os dados da lista
-        for (Medico medico : medicos) {
-            modelo.addRow(new Object[]{
-                medico.getId(),
-                medico.getNome(),
-                medico.getCrm(),
-                medico.getEspecialidade().getNome()
-            });
+            DefaultTableModel modelo = (DefaultTableModel) tblMedicos.getModel();
+            modelo.setRowCount(0);
+
+            for (Medico medico : medicos) {
+               
+                String nomeEspecialidade = "Sem Especialidade";
+                if (medico.getEspecialidade() != null) {
+                    nomeEspecialidade = medico.getEspecialidade().getNome();
+                }
+
+                modelo.addRow(new Object[]{
+                    medico.getId(),
+                    medico.getNome(),
+                    medico.getCrm(),
+                    nomeEspecialidade
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar dados: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        // Atualiza a tabela (opcional)
-        tableMedicos.repaint();
+    
+        tblMedicos.repaint();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton editarBtn;
-    private javax.swing.JButton excluirBtn;
-    private javax.swing.JButton fecharBtn;
+    private javax.swing.JButton bntEditar;
+    private javax.swing.JButton bntExcluir;
+    private javax.swing.JButton bntFechar;
+    private javax.swing.JButton bntNovo;
     private javax.swing.JLabel imageIcon;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableMedicos;
+    private javax.swing.JTable tblMedicos;
     // End of variables declaration//GEN-END:variables
 }
