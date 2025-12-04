@@ -28,3 +28,13 @@ CREATE TABLE IF NOT EXISTS pacientes (
     cpf VARCHAR(14) NOT NULL,
     telefone VARCHAR(20)
 );
+CREATE TABLE IF NOT EXISTS atendentes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    usuario VARCHAR(50) NOT NULL UNIQUE,
+    senha VARCHAR(100) NOT NULL
+);
+
+INSERT INTO atendentes (nome, usuario, senha) 
+SELECT 'Administrador', 'admin', '123' 
+WHERE NOT EXISTS (SELECT * FROM atendentes WHERE usuario = 'admin');
