@@ -24,7 +24,7 @@ CREATE TABLE medicos (
 CREATE TABLE IF NOT EXISTS pacientes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
-    rg VARCHAR(20),
+    data_nascimento DATE, -- Substituiu o RG
     cpf VARCHAR(14) NOT NULL,
     telefone VARCHAR(20)
 );

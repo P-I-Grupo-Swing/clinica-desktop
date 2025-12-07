@@ -43,12 +43,6 @@ public class MainMenu extends BaseScreen {
         medicoMenu = new javax.swing.JMenu();
         cadastrarMedico = new javax.swing.JMenuItem();
         listarMedico = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        mntmPacientes = new javax.swing.JMenuItem();
-        mntmListarPacientes = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        mntmListarAtendentes = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -92,46 +86,6 @@ public class MainMenu extends BaseScreen {
 
         jMenuBar1.add(medicoMenu);
 
-        jMenu1.setText("Pacientes");
-
-        mntmPacientes.setText("Novo Paciente");
-        mntmPacientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mntmPacientesActionPerformed(evt);
-            }
-        });
-        jMenu1.add(mntmPacientes);
-
-        mntmListarPacientes.setText("Listar Pacientes");
-        mntmListarPacientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mntmListarPacientesActionPerformed(evt);
-            }
-        });
-        jMenu1.add(mntmListarPacientes);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Atendentes");
-
-        mntmListarAtendentes.setText("Novo Atendente");
-        mntmListarAtendentes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mntmListarAtendentesActionPerformed(evt);
-            }
-        });
-        jMenu2.add(mntmListarAtendentes);
-
-        jMenuItem2.setText("Listar Atendentes");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem2);
-
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -172,29 +126,6 @@ public class MainMenu extends BaseScreen {
         medicoListForm.setVisible(true);
     }//GEN-LAST:event_listarMedicoActionPerformed
 
-    private void mntmPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mntmPacientesActionPerformed
-new br.edu.imepac.clinica.screens.pacientes.PacienteAddForm().setVisible(true);        // TODO add your handling code here:
-    }//GEN-LAST:event_mntmPacientesActionPerformed
-
-    private void mntmListarPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mntmListarPacientesActionPerformed
-new br.edu.imepac.clinica.screens.pacientes.PacienteListForm().setVisible(true);        // TODO add your handling code here:
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mntmListarPacientesActionPerformed
-
-    private void mntmListarAtendentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mntmListarAtendentesActionPerformed
-// Abre a tela de cadastro
-    br.edu.imepac.clinica.screens.atendente.AtendenteAddForm telaCadastro 
-            = new br.edu.imepac.clinica.screens.atendente.AtendenteAddForm();
-    telaCadastro.setVisible(true);        // TODO add your handling code here:
-    }//GEN-LAST:event_mntmListarAtendentesActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-// Abre a tela de listagem
-    br.edu.imepac.clinica.screens.atendente.AtendenteListForm telaLista 
-            = new br.edu.imepac.clinica.screens.atendente.AtendenteListForm();
-    telaLista.setVisible(true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -224,15 +155,9 @@ new br.edu.imepac.clinica.screens.pacientes.PacienteListForm().setVisible(true);
     private javax.swing.JMenuItem cadastrarEspecialidade;
     private javax.swing.JMenuItem cadastrarMedico;
     private javax.swing.JMenu especialidadeMenu;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem listarEspecialidade;
     private javax.swing.JMenuItem listarMedico;
     private javax.swing.JMenu medicoMenu;
-    private javax.swing.JMenuItem mntmListarAtendentes;
-    private javax.swing.JMenuItem mntmListarPacientes;
-    private javax.swing.JMenuItem mntmPacientes;
     // End of variables declaration//GEN-END:variables
 }

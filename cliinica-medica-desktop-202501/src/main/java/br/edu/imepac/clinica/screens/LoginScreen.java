@@ -107,7 +107,7 @@ String usuario = txtUsuario.getText();
         JOptionPane.showMessageDialog(this, "Bem-vindo, " + logado.getNome());
         
         // Abre o menu e fecha o login
-        new MainMenu().setVisible(true);
+        new PainelAtendenteForm().setVisible(true);
         this.dispose();
     } else {
         JOptionPane.showMessageDialog(this, "Dados inválidos!", "Erro", JOptionPane.ERROR_MESSAGE);
