@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.edu.imepac.clinica.screens.medicos;
+
 import br.edu.imepac.clinica.daos.ConsultasDao;
 import br.edu.imepac.clinica.entidades.Consulta;
 import br.edu.imepac.clinica.entidades.Medico;
@@ -12,17 +13,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+// Importante: Importar a tela de atendimento
+import br.edu.imepac.clinica.screens.medicos.RealizarAtendimentoForm;
 /**
  *
  * @author Pedro Fernandes
  */
 public class MedicoAgendaForm extends javax.swing.JFrame {
     // 1. Variáveis de Controle
-    private ConsultasDao consultaDao = new ConsultasDao();
-    private Medico medicoLogado; // Guarda quem está logado
+     private ConsultasDao consultaDao = new ConsultasDao();
+    private Medico medicoLogado;
     private Long idConsultaSelecionada = null;
     
-    // Formatador para a hora ficar bonita (14:30)
+    // Formatador para a hora (14:30)
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
     /**
@@ -34,52 +37,66 @@ public class MedicoAgendaForm extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         // Mostra o nome no topo
-        lblNomeMedico.setText("Olá, Dr(a). " + m.getNome());
+        if (m != null) {
+            lblNomeMedico.setText("Olá, Dr(a). " + m.getNome());
+        }
         
         carregarMinhaAgenda(); // Busca só as consultas dele
     }
+
+    // Construtor Vazio (Necessário para o NetBeans)
+    public MedicoAgendaForm() {
+        initComponents();
+    }
+
     private void carregarMinhaAgenda() {
         DefaultTableModel modelo = (DefaultTableModel) tblAgenda.getModel();
         modelo.setNumRows(0);
         
         List<Consulta> todas = consultaDao.listarTodos();
         
+        // Verifica se a caixinha está marcada
+        boolean queroVerHistorico = chkVerRealizadas.isSelected();
+        
         for (Consulta c : todas) {
-            // CORREÇÃO 1: Removemos a verificação "getId() == null"
-            // Apenas verificamos se o objeto Medico existe.
-            if (c.getMedico() == null) {
-                continue; 
-            }
+            if (c.getMedico() == null) continue;
 
-            // CORREÇÃO 2: Removemos o .longValue()
-            // Como são primitivos (long), podemos comparar direto com ==
+            // Filtro 1: É meu?
             boolean ehMeu = c.getMedico().getId() == medicoLogado.getId();
             
-            // Verifica status
-            boolean estaPendente = c.getStatus() == StatusConsulta.AGENDADA;
+            // Filtro 2: Status (Depende do Checkbox)
+            boolean statusCorreto;
+            if (queroVerHistorico) {
+                // Se marcou a caixa, mostra as REALIZADAS
+                statusCorreto = c.getStatus() == StatusConsulta.REALIZADA;
+            } else {
+                // Se não marcou, mostra só as pendentes (AGENDADA)
+                statusCorreto = c.getStatus() == StatusConsulta.AGENDADA;
+            }
             
-            if (ehMeu && estaPendente) {
-                // Formata a hora
-                String horaFormatada = "";
-                if (c.getDataHora() != null) {
-                    horaFormatada = c.getDataHora().format(formatter);
-                }
-
+            if (ehMeu && statusCorreto) {
+                String hora = c.getDataHora() != null ? c.getDataHora().format(formatter) : "";
                 modelo.addRow(new Object[]{
                     c.getId(),
-                    horaFormatada,
+                    hora,
                     c.getPaciente().getNome(),
                     c.getObservacoes(),
                     c.getStatus()
                 });
             }
         }
+        
+        // Muda o texto do botão dependendo do modo
+        if (queroVerHistorico) {
+            btnAtender.setText("Ver Prontuário");
+        } else {
+            btnAtender.setText("Realizar Atendimento");
+        }
     }
 
+
     // Construtor Vazio (Necessário para o NetBeans não dar erro)
-    public MedicoAgendaForm() {
-        initComponents();
-    }
+   
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MedicoAgendaForm.class.getName());
 
     /**
@@ -102,6 +119,7 @@ public class MedicoAgendaForm extends javax.swing.JFrame {
         btnAtender = new javax.swing.JButton();
         btnAtualizar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        chkVerRealizadas = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,11 +134,11 @@ public class MedicoAgendaForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Hora", "Paciente", "Observações", "Status"
+                "ID", "Hora", "Paciente", "Observações", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -156,6 +174,13 @@ public class MedicoAgendaForm extends javax.swing.JFrame {
             }
         });
 
+        chkVerRealizadas.setText("Ver Realizadas");
+        chkVerRealizadas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkVerRealizadasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -171,13 +196,16 @@ public class MedicoAgendaForm extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
                                         .addComponent(lblNomeMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel1)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(chkVerRealizadas))))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(btnAtender)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnAtualizar)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(16, 16, 16))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnSair)))
@@ -187,7 +215,9 @@ public class MedicoAgendaForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(chkVerRealizadas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNomeMedico)
                 .addGap(18, 18, 18)
@@ -209,29 +239,38 @@ carregarMinhaAgenda();        // TODO add your handling code here:
     }//GEN-LAST:event_btnAtualizarActionPerformed
 
     private void btnAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtenderActionPerformed
-if (idConsultaSelecionada == null) {
-        JOptionPane.showMessageDialog(this, "Selecione um paciente na tabela para atender.");
-        return;
-    }    
-    JOptionPane.showMessageDialog(this, "Iniciando atendimento da consulta ID: " + idConsultaSelecionada);
-// TODO add your handling code here:
+        if (idConsultaSelecionada == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um paciente na tabela para atender.");
+            return;
+        }
+        
+        // Abre a tela de Prontuário passando o ID da consulta
+        new RealizarAtendimentoForm(idConsultaSelecionada).setVisible(true);
     }//GEN-LAST:event_btnAtenderActionPerformed
 
     private void tblAgendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAgendaMouseClicked
 int linha = tblAgenda.getSelectedRow();
-    if (linha != -1) {
-        // Pega o ID da consulta (Supondo que ID é a coluna 0)
-        idConsultaSelecionada = Long.valueOf(tblAgenda.getValueAt(linha, 0).toString());
-        
-        // Destrava o botão de atender
-        btnAtender.setEnabled(true);
-    }        // TODO add your handling code here:
+        if (linha != -1) {
+            // Pega o ID da consulta (Coluna 0)
+            Object valorId = tblAgenda.getValueAt(linha, 0);
+            
+            // Converte Object para Long de forma segura
+            idConsultaSelecionada = Long.valueOf(valorId.toString());
+            
+            // Destrava o botão verde
+            btnAtender.setEnabled(true);
+        }
     }//GEN-LAST:event_tblAgendaMouseClicked
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
        this.dispose();        // TODO add your handling code here:
     // TODO add your handling code here:
     }//GEN-LAST:event_btnSairActionPerformed
+
+    private void chkVerRealizadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkVerRealizadasActionPerformed
+        carregarMinhaAgenda();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkVerRealizadasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -262,9 +301,11 @@ int linha = tblAgenda.getSelectedRow();
     private javax.swing.JButton btnAtender;
     private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnSair;
+    private javax.swing.JCheckBox chkVerRealizadas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblNomeMedico;
     private javax.swing.JTable tblAgenda;
     // End of variables declaration//GEN-END:variables
 }
+

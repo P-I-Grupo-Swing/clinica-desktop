@@ -44,29 +44,19 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="txtConvenios" pref="0" max="32767" attributes="0"/>
-                  <Component id="btnAtendentes" min="-2" pref="134" max="-2" attributes="0"/>
+                  <Component id="txtRelatorio" max="32767" attributes="0"/>
+                  <Component id="txtRelConvenio" max="32767" attributes="0"/>
+                  <Component id="txtConvenios" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnPacientes" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="137" max="32767" attributes="0"/>
+              <EmptySpace pref="92" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="btnEspecialidades" max="32767" attributes="0"/>
+                  <Component id="btnAtendentes" max="32767" attributes="0"/>
                   <Component id="txtConsultas" max="32767" attributes="0"/>
+                  <Component id="txtEspecialidades" max="32767" attributes="0"/>
+                  <Component id="btnMedicos" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="117" max="-2" attributes="0"/>
-          </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
-                  <Component id="btnPacientes" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="389" max="32767" attributes="0"/>
-              </Group>
-          </Group>
-          <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="389" max="32767" attributes="0"/>
-                  <Component id="btnMedicos" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
-              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -77,33 +67,29 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lblBoasVindas" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="122" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnAtendentes" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
-                  <Component id="btnEspecialidades" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
+                  <Component id="btnMedicos" alignment="3" min="-2" pref="51" max="-2" attributes="0"/>
+                  <Component id="btnPacientes" alignment="3" min="-2" pref="51" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="txtConsultas" pref="46" max="32767" attributes="0"/>
-                  <Component id="txtConvenios" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtEspecialidades" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
+                  <Component id="txtConvenios" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="74" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtConsultas" alignment="3" min="-2" pref="52" max="-2" attributes="0"/>
+                  <Component id="txtRelatorio" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="txtRelConvenio" max="32767" attributes="0"/>
+                  <Component id="btnAtendentes" pref="50" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace pref="115" max="32767" attributes="0"/>
               <Component id="btnSair" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-          </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
-                  <Component id="btnPacientes" min="-2" pref="50" max="-2" attributes="0"/>
-                  <EmptySpace pref="246" max="32767" attributes="0"/>
-              </Group>
-          </Group>
-          <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
-                  <Component id="btnMedicos" min="-2" pref="50" max="-2" attributes="0"/>
-                  <EmptySpace pref="248" max="32767" attributes="0"/>
-              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -124,14 +110,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Bem-vindo(a) ao sistema."/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnEspecialidades">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Especialidades"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEspecialidadesActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAtendentes">
       <Properties>
@@ -179,6 +157,30 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtConsultasActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="txtRelatorio">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Relatorios"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRelatorioActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="txtEspecialidades">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Gerenciar Especialidades"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtEspecialidadesActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="txtRelConvenio">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Paciente Por Convenios"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRelConvenioActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

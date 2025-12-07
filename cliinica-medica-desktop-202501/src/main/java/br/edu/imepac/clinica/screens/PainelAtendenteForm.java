@@ -5,10 +5,12 @@
 package br.edu.imepac.clinica.screens;
 import br.edu.imepac.clinica.screens.atendente.GestaoAtendentesForm;
 import br.edu.imepac.clinica.screens.pacientes.GestaoPacientesForm;
-import br.edu.imepac.clinica.screens.especialidades.EspecialidadeListForm;
 import br.edu.imepac.clinica.screens.convenio.GestaoConveniosForm;
+import br.edu.imepac.clinica.screens.convenio.RelatorioConvenioForm;
 import br.edu.imepac.clinica.screens.consultas.GestaoConsultasForm;
 import br.edu.imepac.clinica.screens.medicos.GestaoMedicosForm;
+import br.edu.imepac.clinica.screens.RelatorioForm;
+import br.edu.imepac.clinica.screens.especialidades.GestaoEspecialidadesForm;
 /**
  *
  * @author Pedro Fernandes
@@ -46,13 +48,15 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         lblBoasVindas = new javax.swing.JLabel();
-        btnEspecialidades = new javax.swing.JButton();
         btnAtendentes = new javax.swing.JButton();
         btnPacientes = new javax.swing.JButton();
         btnMedicos = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
         txtConvenios = new javax.swing.JButton();
         txtConsultas = new javax.swing.JButton();
+        txtRelatorio = new javax.swing.JButton();
+        txtEspecialidades = new javax.swing.JButton();
+        txtRelConvenio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,13 +65,6 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
 
         lblBoasVindas.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblBoasVindas.setText("Bem-vindo(a) ao sistema.");
-
-        btnEspecialidades.setText("Especialidades");
-        btnEspecialidades.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEspecialidadesActionPerformed(evt);
-            }
-        });
 
         btnAtendentes.setText("Gerenciar Atendentes");
         btnAtendentes.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +108,27 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
             }
         });
 
+        txtRelatorio.setText("Relatorios");
+        txtRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRelatorioActionPerformed(evt);
+            }
+        });
+
+        txtEspecialidades.setText("Gerenciar Especialidades");
+        txtEspecialidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEspecialidadesActionPerformed(evt);
+            }
+        });
+
+        txtRelConvenio.setText("Paciente Por Convenios");
+        txtRelConvenio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRelConvenioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,23 +149,17 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(112, 112, 112)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtConvenios, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnAtendentes, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
+                    .addComponent(txtRelatorio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtRelConvenio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtConvenios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPacientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnEspecialidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtConsultas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAtendentes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtConsultas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtEspecialidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMedicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(117, 117, 117))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(113, 113, 113)
-                    .addComponent(btnPacientes)
-                    .addContainerGap(389, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(389, Short.MAX_VALUE)
-                    .addComponent(btnMedicos)
-                    .addGap(118, 118, 118)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,34 +168,29 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblBoasVindas)
-                .addGap(122, 122, 122)
+                .addGap(51, 51, 51)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAtendentes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEspecialidades, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPacientes, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEspecialidades, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtConvenios, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtConsultas, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addComponent(txtConvenios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                    .addComponent(txtRelConvenio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAtendentes, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
                 .addComponent(btnSair)
                 .addGap(14, 14, 14))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(113, 113, 113)
-                    .addComponent(btnPacientes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(246, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(111, 111, 111)
-                    .addComponent(btnMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(248, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnEspecialidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEspecialidadesActionPerformed
-    new EspecialidadeListForm().setVisible(true);    }//GEN-LAST:event_btnEspecialidadesActionPerformed
 
     private void btnAtendentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtendentesActionPerformed
     new GestaoAtendentesForm().setVisible(true);    }//GEN-LAST:event_btnAtendentesActionPerformed
@@ -209,6 +216,18 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
     private void txtConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConsultasActionPerformed
     new GestaoConsultasForm().setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_txtConsultasActionPerformed
+
+    private void txtRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRelatorioActionPerformed
+new RelatorioForm().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRelatorioActionPerformed
+
+    private void txtEspecialidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEspecialidadesActionPerformed
+new GestaoEspecialidadesForm().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEspecialidadesActionPerformed
+
+    private void txtRelConvenioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRelConvenioActionPerformed
+new RelatorioConvenioForm().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRelConvenioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -237,7 +256,6 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAtendentes;
-    private javax.swing.JButton btnEspecialidades;
     private javax.swing.JButton btnMedicos;
     private javax.swing.JButton btnPacientes;
     private javax.swing.JButton btnSair;
@@ -245,5 +263,8 @@ public class PainelAtendenteForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblBoasVindas;
     private javax.swing.JButton txtConsultas;
     private javax.swing.JButton txtConvenios;
+    private javax.swing.JButton txtEspecialidades;
+    private javax.swing.JButton txtRelConvenio;
+    private javax.swing.JButton txtRelatorio;
     // End of variables declaration//GEN-END:variables
 }

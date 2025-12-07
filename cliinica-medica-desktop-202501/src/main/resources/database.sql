@@ -67,10 +67,6 @@ CREATE TABLE IF NOT EXISTS consultas (
     CONSTRAINT fk_consulta_convenio FOREIGN KEY (id_convenio) REFERENCES convenios(id)
 );
 
-/// CODIGO AQUI PEDRO
-
-
-USE clinica;
 
 DROP TABLE IF EXISTS prontuarios;
 

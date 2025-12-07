@@ -4,7 +4,7 @@
  */
 package br.edu.imepac.clinica.daos;
 
-import br.edu.imepac.clinica.entidades.Paciente; // CORREÇÃO: Singular
+import br.edu.imepac.clinica.entidades.Paciente;
 import br.edu.imepac.clinica.interfaces.Persistente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,6 @@ public class PacienteDao extends BaseDao implements Persistente<Paciente> {
 
     @Override
     public boolean salvar(Paciente p) {
-        // SQL ajustado: trocou 'rg' por 'data_nascimento'
         String sql = "INSERT INTO pacientes (nome, data_nascimento, cpf, telefone) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -28,7 +27,6 @@ public class PacienteDao extends BaseDao implements Persistente<Paciente> {
 
             stmt.setString(1, p.getNome());
             
-            // CONVERSÃO DE DATA (Java -> SQL)
             if (p.getDataNascimento() != null) {
                 stmt.setDate(2, java.sql.Date.valueOf(p.getDataNascimento()));
             } else {
@@ -131,8 +129,6 @@ public class PacienteDao extends BaseDao implements Persistente<Paciente> {
 
     @Override
     public List<Paciente> listarTodos() {
-        System.out.println(">>> DAO: Iniciando listagem de todos os pacientes...");
-        
         String sql = "SELECT * FROM pacientes ORDER BY nome";
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -146,9 +142,7 @@ public class PacienteDao extends BaseDao implements Persistente<Paciente> {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Paciente p = criarPacienteDoResultSet(rs);
-                lista.add(p);
-                System.out.println(">>> DAO: Encontrado: " + p.getNome());
+                lista.add(criarPacienteDoResultSet(rs));
             }
             
         } catch (SQLException e) {
@@ -161,13 +155,45 @@ public class PacienteDao extends BaseDao implements Persistente<Paciente> {
         return lista;
     }
     
-    // Método auxiliar para montar o objeto e converter a Data
+    public List<Paciente> listarPorConvenio(long idConvenio) {
+        System.out.println(">>> RELATÓRIO: Buscando pacientes do convênio ID: " + idConvenio);
+        
+        String sql = "SELECT DISTINCT p.* FROM pacientes p " +
+                     "INNER JOIN consultas c ON p.id = c.paciente_id " +
+                     "WHERE c.convenio_id = ? " +
+                     "ORDER BY p.nome";
+        
+        List<Paciente> lista = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, idConvenio);
+            
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Paciente p = criarPacienteDoResultSet(rs);
+                lista.add(p);
+                System.out.println(">>> Encontrado: " + p.getNome());
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro no relatório: " + e.getMessage());
+        } finally {
+            fecharRecursos(conn, stmt, rs);
+        }
+        return lista;
+    }
+
+    // Método auxiliar
     private Paciente criarPacienteDoResultSet(ResultSet rs) throws SQLException {
         Paciente p = new Paciente();
         p.setId(rs.getLong("id"));
         p.setNome(rs.getString("nome"));
         
-        // CONVERSÃO DE DATA (SQL -> Java)
         if (rs.getDate("data_nascimento") != null) {
             p.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
         }
