@@ -4,14 +4,18 @@
  */
 package br.edu.imepac.clinica.screens;
 import br.edu.imepac.clinica.daos.AtendenteDao;
+import br.edu.imepac.clinica.daos.MedicoDao;
 import br.edu.imepac.clinica.entidades.Atendente;
+import br.edu.imepac.clinica.entidades.Medico;
+import br.edu.imepac.clinica.screens.medicos.MedicoAgendaForm;
 import javax.swing.JOptionPane;
 /**
  *
  * @author Pedro Fernandes
  */
 public class LoginScreen extends javax.swing.JFrame {
-    private AtendenteDao atendenteDao = new AtendenteDao();
+ private AtendenteDao atendenteDao = new AtendenteDao();
+    private MedicoDao medicoDao = new MedicoDao();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginScreen.class.getName());
 
     /**
@@ -92,26 +96,40 @@ System.exit(0);        // TODO add your handling code here:
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
 String usuario = txtUsuario.getText();
-    // Pega a senha (agora funciona porque usaste JPasswordField)
-    String senha = new String(txtSenha.getPassword()); 
+        String senha = new String(txtSenha.getPassword());
 
-    if (usuario.isEmpty() || senha.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Preencha usuário e senha!");
-        return;
-    }
+        if (usuario.isEmpty() || senha.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha usuário e senha!");
+            return;
+        }
 
-    // Verifica no banco
-    Atendente logado = atendenteDao.autenticar(usuario, senha);
+        // 1. TENTA LOGAR COMO ATENDENTE (Secretária)
+        Atendente atendente = atendenteDao.autenticar(usuario, senha);
 
-    if (logado != null) {
-        JOptionPane.showMessageDialog(this, "Bem-vindo, " + logado.getNome());
-        
-        // Abre o menu e fecha o login
-        new PainelAtendenteForm().setVisible(true);
-        this.dispose();
-    } else {
-        JOptionPane.showMessageDialog(this, "Dados inválidos!", "Erro", JOptionPane.ERROR_MESSAGE);
-    }        // TODO add your handling code here:
+        if (atendente != null) {
+            JOptionPane.showMessageDialog(this, "Bem-vindo(a), " + atendente.getNome());
+            
+            // Abre o Painel Administrativo
+            new PainelAtendenteForm(atendente.getNome()).setVisible(true);
+            this.dispose();
+            return; // Sai do método para não tentar logar como médico
+        }
+
+        // 2. TENTA LOGAR COMO MÉDICO (Se não for atendente)
+        // Aqui o 'usuario' é o CRM
+        Medico medico = medicoDao.autenticar(usuario, senha);
+
+        if (medico != null) {
+            JOptionPane.showMessageDialog(this, "Olá, Dr(a). " + medico.getNome());
+            
+            // Abre a Agenda do Médico (passando o objeto medico)
+            new MedicoAgendaForm(medico).setVisible(true);
+            this.dispose();
+            
+        } else {
+            // 3. FALHOU NOS DOIS
+            JOptionPane.showMessageDialog(this, "Usuário/CRM ou senha inválidos!", "Erro de Acesso", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**

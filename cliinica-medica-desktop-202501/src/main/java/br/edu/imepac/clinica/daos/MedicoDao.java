@@ -14,164 +14,130 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO responsável pelas operações CRUD da entidade Medico. Utiliza abordagem
- * manual de try/finally com métodos de fechamento da BaseDao.
- *
- * @author everton
- */
 public class MedicoDao extends BaseDao implements Persistente<Medico> {
 
-    @Override
-    public boolean salvar(Medico entidade) {
-        String sql = "INSERT INTO medicos (nome, crm, especialidade_id) VALUES (?, ?, ?)";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, entidade.getNome());
-            stmt.setString(2, entidade.getCrm());
-            stmt.setLong(3, entidade.getEspecialidadeId());
-
-            int linhas = stmt.executeUpdate();
-            return linhas > 0;
-
+    /**
+     * Tenta logar como Médico usando CRM e SENHA.
+     */
+    public Medico autenticar(String crm, String senha) {
+        // MUDANÇA: Verifica se o CRM e a Senha batem
+        String sql = "SELECT m.*, e.nome as esp_nome FROM medicos m " +
+                     "LEFT JOIN especialidades e ON m.especialidade_id = e.id " +
+                     "WHERE m.crm = ? AND m.senha = ?";
+        
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, crm);
+            stmt.setString(2, senha);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return criarMedico(rs);
+            }
         } catch (SQLException e) {
-            System.err.println("Erro ao salvar medicos: " + e.getMessage());
-            return false;
+            System.err.println("Erro ao logar médico: " + e.getMessage());
+        }
+        return null;
+    }
 
-        } finally {
-            fecharRecursos(conn, stmt);
+    @Override
+    public boolean salvar(Medico m) {
+        // MUDANÇA: Removemos 'usuario'. Salvamos Nome, CRM, Senha e Especialidade.
+        String sql = "INSERT INTO medicos (nome, crm, senha, especialidade_id) VALUES (?, ?, ?, ?)";
+        
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, m.getNome());
+            stmt.setString(2, m.getCrm());
+            stmt.setString(3, m.getSenha());
+            
+            // Verifica se o ID vem do objeto Especialidade ou do campo auxiliar
+            long espId = (m.getEspecialidade() != null) ? m.getEspecialidade().getId() : m.getEspecialidadeId();
+            stmt.setLong(4, espId);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar médico: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public boolean atualizar(Medico entidade) {
-        String sql = "UPDATE medicos SET nome = ?, crm = ?, especialidade_id = ? WHERE id = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
+    public boolean atualizar(Medico m) {
+        String sql = "UPDATE medicos SET nome=?, crm=?, senha=?, especialidade_id=? WHERE id=?";
+        
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, m.getNome());
+            stmt.setString(2, m.getCrm());
+            stmt.setString(3, m.getSenha());
+            
+            long espId = (m.getEspecialidade() != null) ? m.getEspecialidade().getId() : m.getEspecialidadeId();
+            stmt.setLong(4, espId);
+            
+            stmt.setLong(5, m.getId());
 
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, entidade.getNome());
-            stmt.setString(2, entidade.getCrm());
-            stmt.setLong(3, entidade.getEspecialidadeId());
-            stmt.setLong(4, entidade.getId());
-
-            int linhas = stmt.executeUpdate();
-            return linhas > 0;
-
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Erro ao atualizar medicos: " + e.getMessage());
+            System.err.println("Erro ao atualizar médico: " + e.getMessage());
             return false;
-
-        } finally {
-            fecharRecursos(conn, stmt);
         }
     }
 
     @Override
     public boolean excluir(long id) {
-        String sql = "DELETE FROM medicos WHERE id = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement(sql);
-
+        String sql = "DELETE FROM medicos WHERE id=?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
-
-            int linhas = stmt.executeUpdate();
-            return linhas > 0;
-
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Erro ao excluir medicos: " + e.getMessage());
             return false;
-
-        } finally {
-            fecharRecursos(conn, stmt);
         }
-    }
-
-    @Override
-    public Medico buscarPorId(long id) {
-        String sql
-                = "SELECT m.id, m.nome, m.crm, m.especialidade_id, "
-                + "       e.id, e.nome, e.descricao "
-                + "FROM medicos m "
-                + "JOIN especialidades e ON e.id = m.especialidade_id "
-                + "WHERE m.id = ?";
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        Medico medico = null;
-
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, id);
-
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Especialidade especialidade = new Especialidade(rs.getLong("e.id"), rs.getString("e.nome"), rs.getString("e.descricao"));
-                medico = new Medico(rs.getLong("m.id"), rs.getString("m.nome"), rs.getString("m.crm"), especialidade);
-            }
-        } catch (SQLException e) {
-            System.err.println("Erro ao buscar medicos por ID: " + e.getMessage());
-
-        } finally {
-            fecharRecursos(conn, stmt, rs);
-        }
-
-        return medico;
     }
 
     @Override
     public List<Medico> listarTodos() {
-        String sql =  "SELECT m.id, m.nome, m.crm, m.especialidade_id," +
-            "       e.id, e.nome, e.descricao " +
-            "FROM medicos m " +
-            "JOIN especialidades e ON e.id = m.especialidade_id " +
-            "ORDER BY m.nome";
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        
+        String sql = "SELECT m.*, e.nome as esp_nome FROM medicos m " +
+                     "LEFT JOIN especialidades e ON m.especialidade_id = e.id " +
+                     "ORDER BY m.nome";
         List<Medico> lista = new ArrayList<>();
-
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement(sql);
-            rs = stmt.executeQuery();
-
+        
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Especialidade especialidade = new Especialidade(rs.getLong("e.id"), rs.getString("e.nome"), rs.getString("e.descricao"));
-                
-                Medico medicos = new Medico();
-                medicos.setId(rs.getLong("id"));
-                medicos.setNome(rs.getString("nome"));
-                medicos.setCrm(rs.getString("crm"));
-                medicos.setEspecialidade(especialidade);
-                
-                lista.add(medicos);
+                lista.add(criarMedico(rs));
             }
-
         } catch (SQLException e) {
-            System.err.println("Erro ao listar medicoss: " + e.getMessage());
-
-        } finally {
-            fecharRecursos(conn, stmt, rs);
+            e.printStackTrace();
         }
-
         return lista;
+    }
+
+    @Override
+    public Medico buscarPorId(long id) {
+        String sql = "SELECT m.*, e.nome as esp_nome FROM medicos m " +
+                     "LEFT JOIN especialidades e ON m.especialidade_id = e.id WHERE m.id=?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return criarMedico(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Método auxiliar para evitar repetição
+    private Medico criarMedico(ResultSet rs) throws SQLException {
+        Medico m = new Medico();
+        m.setId(rs.getLong("id"));
+        m.setNome(rs.getString("nome"));
+        m.setCrm(rs.getString("crm"));
+        m.setSenha(rs.getString("senha"));
+        
+        // Removemos a linha m.setUsuario(...), pois não existe mais na classe
+
+        Especialidade e = new Especialidade();
+        e.setId(rs.getLong("especialidade_id"));
+        e.setNome(rs.getString("esp_nome"));
+        m.setEspecialidade(e);
+        m.setEspecialidadeId(e.getId());
+        
+        return m;
     }
 }

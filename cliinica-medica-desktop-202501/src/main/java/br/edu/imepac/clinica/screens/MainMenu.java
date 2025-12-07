@@ -6,9 +6,7 @@ package br.edu.imepac.clinica.screens;
 
 import br.edu.imepac.clinica.screens.especialidades.EspecialidadeAddForm;
 import br.edu.imepac.clinica.screens.especialidades.EspecialidadeListForm;
-import br.edu.imepac.clinica.screens.medicos.MedicoAddForm;
-import br.edu.imepac.clinica.screens.medicos.MedicoListForm;
-import br.edu.imepac.clinica.screens.medicos.MedicoUpdateForm;
+
 
 /**
  *
@@ -40,9 +38,6 @@ public class MainMenu extends BaseScreen {
         especialidadeMenu = new javax.swing.JMenu();
         cadastrarEspecialidade = new javax.swing.JMenuItem();
         listarEspecialidade = new javax.swing.JMenuItem();
-        medicoMenu = new javax.swing.JMenu();
-        cadastrarMedico = new javax.swing.JMenuItem();
-        listarMedico = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,26 +60,6 @@ public class MainMenu extends BaseScreen {
         especialidadeMenu.add(listarEspecialidade);
 
         jMenuBar1.add(especialidadeMenu);
-
-        medicoMenu.setText("Medicos");
-
-        cadastrarMedico.setText("Cadastrar");
-        cadastrarMedico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cadastrarMedicoActionPerformed(evt);
-            }
-        });
-        medicoMenu.add(cadastrarMedico);
-
-        listarMedico.setText("Listagem");
-        listarMedico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listarMedicoActionPerformed(evt);
-            }
-        });
-        medicoMenu.add(listarMedico);
-
-        jMenuBar1.add(medicoMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -114,18 +89,6 @@ public class MainMenu extends BaseScreen {
        especialidadeListForm.setVisible(true);
     }//GEN-LAST:event_listarEspecialidadeActionPerformed
 
-    private void cadastrarMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarMedicoActionPerformed
-        MedicoAddForm medicoAddForm = new MedicoAddForm();
-        medicoAddForm.pack();
-        medicoAddForm.setVisible(true);
-    }//GEN-LAST:event_cadastrarMedicoActionPerformed
-
-    private void listarMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarMedicoActionPerformed
-        MedicoListForm medicoListForm = new MedicoListForm();
-        medicoListForm.pack();
-        medicoListForm.setVisible(true);
-    }//GEN-LAST:event_listarMedicoActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -153,11 +116,8 @@ public class MainMenu extends BaseScreen {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem cadastrarEspecialidade;
-    private javax.swing.JMenuItem cadastrarMedico;
     private javax.swing.JMenu especialidadeMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem listarEspecialidade;
-    private javax.swing.JMenuItem listarMedico;
-    private javax.swing.JMenu medicoMenu;
     // End of variables declaration//GEN-END:variables
 }
