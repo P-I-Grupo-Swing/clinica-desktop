@@ -4,85 +4,48 @@
  */
 package br.edu.imepac.clinica.entidades;
 
-/**
- *
- * @author evertonhf
- */
 public class Medico {
-
-    private long id;
+    
+    private Long id;
     private String nome;
-    private String crm;
-
-    private long especialidadeId;
+    private String crm; // Este será o LOGIN
+    private String senha;
     private Especialidade especialidade;
+    
+    // Auxiliar para DAO
+    private Long especialidadeId; 
 
     public Medico() {
     }
 
-    public Medico(String nome, String crm, Especialidade especialidade) {
-        this(nome, crm, especialidade.getId());
-    }
-
-    public Medico(String nome, String crm, long especialidadeId) {
-        this.nome = nome;
-        this.crm = crm;
-        this.especialidadeId = especialidadeId;
-    }
-
-    public Medico(long id, String nome, String crm, long especialidadeId) {
+    public Medico(Long id, String nome, String crm, String senha, Especialidade especialidade) {
         this.id = id;
         this.nome = nome;
         this.crm = crm;
-        this.especialidadeId = especialidadeId;
-    }
-
-    public Medico(long id, String nome, String crm, Especialidade especialidade) {
-        this(id, nome, crm, especialidade.getId());
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCrm() {
-        return crm;
-    }
-
-    public void setCrm(String crm) {
-        this.crm = crm;
-    }
-
-    public long getEspecialidadeId() {
-        return especialidadeId;
-    }
-
-    public void setEspecialidadeId(long especialidadeId) {
-        this.especialidadeId = especialidadeId;
-    }
-
-    public Especialidade getEspecialidade() {
-        return especialidade;
-    }
-
-    public void setEspecialidade(Especialidade especialidade) {
+        this.senha = senha;
         this.especialidade = especialidade;
     }
 
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getCrm() { return crm; }
+    public void setCrm(String crm) { this.crm = crm; }
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+
+    public Especialidade getEspecialidade() { return especialidade; }
+    public void setEspecialidade(Especialidade especialidade) { this.especialidade = especialidade; }
+
+    public Long getEspecialidadeId() { return especialidadeId; }
+    public void setEspecialidadeId(Long especialidadeId) { this.especialidadeId = especialidadeId; }
+
     @Override
     public String toString() {
-        return nome;
+        return this.nome;
     }
 }

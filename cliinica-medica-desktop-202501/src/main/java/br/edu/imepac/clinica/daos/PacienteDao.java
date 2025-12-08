@@ -4,7 +4,7 @@
  */
 package br.edu.imepac.clinica.daos;
 
-import br.edu.imepac.clinica.entidades.Pacientes;
+import br.edu.imepac.clinica.entidades.Paciente;
 import br.edu.imepac.clinica.interfaces.Persistente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,15 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO responsável pelas operações CRUD da entidade Pacientes.
- * Inclui: Salvar, Atualizar, Excluir e Listar.
- */
-public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
+public class PacienteDao extends BaseDao implements Persistente<Paciente> {
 
     @Override
-    public boolean salvar(Pacientes p) {
-        String sql = "INSERT INTO pacientes (nome, rg, cpf, telefone) VALUES (?, ?, ?, ?)";
+    public boolean salvar(Paciente p) {
+        String sql = "INSERT INTO pacientes (nome, data_nascimento, cpf, telefone) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -30,7 +26,13 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
             stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, p.getNome());
-            stmt.setString(2, p.getRg());
+            
+            if (p.getDataNascimento() != null) {
+                stmt.setDate(2, java.sql.Date.valueOf(p.getDataNascimento()));
+            } else {
+                stmt.setNull(2, java.sql.Types.DATE);
+            }
+            
             stmt.setString(3, p.getCpf());
             stmt.setString(4, p.getTelefone());
 
@@ -46,8 +48,8 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
     }
 
     @Override
-    public boolean atualizar(Pacientes p) {
-        String sql = "UPDATE pacientes SET nome=?, rg=?, cpf=?, telefone=? WHERE id=?";
+    public boolean atualizar(Paciente p) {
+        String sql = "UPDATE pacientes SET nome=?, data_nascimento=?, cpf=?, telefone=? WHERE id=?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -56,7 +58,13 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
             stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, p.getNome());
-            stmt.setString(2, p.getRg());
+            
+            if (p.getDataNascimento() != null) {
+                stmt.setDate(2, java.sql.Date.valueOf(p.getDataNascimento()));
+            } else {
+                stmt.setNull(2, java.sql.Types.DATE);
+            }
+            
             stmt.setString(3, p.getCpf());
             stmt.setString(4, p.getTelefone());
             stmt.setLong(5, p.getId());
@@ -95,12 +103,12 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
     }
 
     @Override
-    public Pacientes buscarPorId(long id) {
+    public Paciente buscarPorId(long id) {
         String sql = "SELECT * FROM pacientes WHERE id = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Pacientes p = null;
+        Paciente p = null;
 
         try {
             conn = getConnection();
@@ -109,12 +117,7 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                p = new Pacientes();
-                p.setId(rs.getLong("id"));
-                p.setNome(rs.getString("nome"));
-                p.setRg(rs.getString("rg"));
-                p.setCpf(rs.getString("cpf"));
-                p.setTelefone(rs.getString("telefone"));
+                p = criarPacienteDoResultSet(rs);
             }
         } catch (SQLException e) {
             System.err.println("Erro ao buscar paciente por ID: " + e.getMessage());
@@ -125,15 +128,13 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
     }
 
     @Override
-    public List<Pacientes> listarTodos() {
-        System.out.println(">>> DAO: Iniciando listagem de todos os pacientes...");
-        
+    public List<Paciente> listarTodos() {
         String sql = "SELECT * FROM pacientes ORDER BY nome";
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         
-        List<Pacientes> lista = new ArrayList<>();
+        List<Paciente> lista = new ArrayList<>();
 
         try {
             conn = getConnection();
@@ -141,15 +142,7 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Pacientes p = new Pacientes();
-                p.setId(rs.getLong("id"));
-                p.setNome(rs.getString("nome"));
-                p.setRg(rs.getString("rg"));
-                p.setCpf(rs.getString("cpf"));
-                p.setTelefone(rs.getString("telefone"));
-                
-                lista.add(p);
-                System.out.println(">>> DAO: Encontrado: " + p.getNome());
+                lista.add(criarPacienteDoResultSet(rs));
             }
             
         } catch (SQLException e) {
@@ -162,33 +155,51 @@ public class PacientesDao extends BaseDao implements Persistente<Pacientes> {
         return lista;
     }
     
-    public List<Pacientes> buscarPorNome(String nome) {
-        String sql = "SELECT * FROM pacientes WHERE nome LIKE ? ORDER BY nome";
+    public List<Paciente> listarPorConvenio(long idConvenio) {
+        System.out.println(">>> RELATÓRIO: Buscando pacientes do convênio ID: " + idConvenio);
+        
+        String sql = "SELECT DISTINCT p.* FROM pacientes p " +
+                     "INNER JOIN consultas c ON p.id = c.paciente_id " +
+                     "WHERE c.convenio_id = ? " +
+                     "ORDER BY p.nome";
+        
+        List<Paciente> lista = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<Pacientes> lista = new ArrayList<>();
 
         try {
             conn = getConnection();
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, "%" + nome + "%");
+            stmt.setLong(1, idConvenio);
+            
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Pacientes p = new Pacientes();
-                p.setId(rs.getLong("id"));
-                p.setNome(rs.getString("nome"));
-                p.setRg(rs.getString("rg"));
-                p.setCpf(rs.getString("cpf"));
-                p.setTelefone(rs.getString("telefone"));
+                Paciente p = criarPacienteDoResultSet(rs);
                 lista.add(p);
+                System.out.println(">>> Encontrado: " + p.getNome());
             }
         } catch (SQLException e) {
-            System.err.println("Erro na busca: " + e.getMessage());
+            System.err.println("Erro no relatório: " + e.getMessage());
         } finally {
             fecharRecursos(conn, stmt, rs);
         }
         return lista;
+    }
+
+    // Método auxiliar
+    private Paciente criarPacienteDoResultSet(ResultSet rs) throws SQLException {
+        Paciente p = new Paciente();
+        p.setId(rs.getLong("id"));
+        p.setNome(rs.getString("nome"));
+        
+        if (rs.getDate("data_nascimento") != null) {
+            p.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+        }
+        
+        p.setCpf(rs.getString("cpf"));
+        p.setTelefone(rs.getString("telefone"));
+        return p;
     }
 }
