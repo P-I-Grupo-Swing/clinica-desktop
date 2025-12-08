@@ -13,12 +13,10 @@ public class Medico {
     private long id;
     private String nome;
     private String crm;
-    
+
     private long especialidadeId;
     private Especialidade especialidade;
-    private long perfilId;
-    private Perfil perfil;
-    
+
     public Medico() {
     }
 
@@ -81,25 +79,6 @@ public class Medico {
 
     public void setEspecialidade(Especialidade especialidade) {
         this.especialidade = especialidade;
-    }
-
-    public long getPerfilId() {
-        return perfilId;
-    }
-
-    public void setPerfilId(long perfilId) {
-        this.perfilId = perfilId;
-    }
-
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
-        if (perfil != null) {
-            this.perfilId = perfil.getId();
-        }
     }
 
     @Override
