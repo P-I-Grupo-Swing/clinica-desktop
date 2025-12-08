@@ -170,6 +170,7 @@ public class GestaoConsultasForm extends javax.swing.JFrame {
         txtFiltroData = new javax.swing.JFormattedTextField();
         btnFiltrar = new javax.swing.JButton();
         btnTodos = new javax.swing.JButton();
+        btnFiltrarMedico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -269,6 +270,13 @@ public class GestaoConsultasForm extends javax.swing.JFrame {
             }
         });
 
+        btnFiltrarMedico.setText("Filtrar por Este Médico");
+        btnFiltrarMedico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarMedicoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -323,7 +331,8 @@ public class GestaoConsultasForm extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(btnFiltrar)
                                         .addGap(18, 18, 18)
-                                        .addComponent(btnTodos)))))
+                                        .addComponent(btnTodos))
+                                    .addComponent(btnFiltrarMedico))))
                         .addGap(0, 56, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -353,22 +362,26 @@ public class GestaoConsultasForm extends javax.swing.JFrame {
                         .addGap(19, 19, 19)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(txtDataHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
+                            .addComponent(txtDataHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnFiltrar)
-                            .addComponent(btnTodos)))
-                    .addComponent(txtFiltroData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgendar)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnLimpar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnAgendar)
+                            .addComponent(btnCancelar)
+                            .addComponent(btnLimpar)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnFiltrar)
+                                    .addComponent(btnTodos)))
+                            .addComponent(txtFiltroData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnFiltrarMedico)))
+                .addGap(14, 14, 14)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(txtSair)
                 .addContainerGap())
         );
@@ -440,6 +453,39 @@ txtFiltroData.setText("");
 carregarTabela();      // TODO add your handling code here:
     }//GEN-LAST:event_btnTodosActionPerformed
 
+    private void btnFiltrarMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarMedicoActionPerformed
+        // 1. Pega o médico que está selecionado na caixinha
+        br.edu.imepac.clinica.entidades.Medico medicoSelecionado = (br.edu.imepac.clinica.entidades.Medico) cbMedico.getSelectedItem();
+        
+        if (medicoSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um médico na caixa de seleção!");
+            return;
+        }
+
+        // 2. Limpa a tabela visual
+        DefaultTableModel modelo = (DefaultTableModel) tblConsultas.getModel();
+        modelo.setNumRows(0);
+
+        // 3. Busca no banco usando o método novo
+        List<Consulta> lista = consultaDao.listarPorMedico(medicoSelecionado.getId());
+
+        // 4. Preenche a tabela
+        for (Consulta c : lista) {
+            String dataBonita = "";
+            if (c.getDataHora() != null) {
+                dataBonita = c.getDataHora().format(formatter);
+            }
+            modelo.addRow(new Object[]{
+                c.getId(),
+                dataBonita,
+                c.getMedico().getNome(),
+                c.getPaciente().getNome(),
+                c.getConvenio().getNomeEmpresa(),
+                c.getStatus()
+            });
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFiltrarMedicoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -469,6 +515,7 @@ carregarTabela();      // TODO add your handling code here:
     private javax.swing.JButton btnAgendar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnFiltrarMedico;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnTodos;
     private javax.swing.JComboBox<Object> cbConvenio;

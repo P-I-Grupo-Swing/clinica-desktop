@@ -161,4 +161,30 @@ public class ConsultasDao extends BaseDao implements Persistente<Consulta> {
         c.setConvenio(conv);
         return c;
     }
+     public List<Consulta> listarPorMedico(Long idMedico) {
+        // Busca todas as consultas daquele médico
+        String sql = getSqlCompleto() + " WHERE c.medico_id = ? ORDER BY c.data_hora DESC";
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Consulta> lista = new ArrayList<>();
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, idMedico);
+            
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(criarConsultaDoResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao filtrar por médico: " + e.getMessage());
+        } finally {
+            fecharRecursos(conn, stmt, rs);
+        }
+        return lista;
+    }
 }
